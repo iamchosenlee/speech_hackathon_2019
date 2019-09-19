@@ -48,8 +48,6 @@ SOS_token = 0
 EOS_token = 0
 PAD_token = 0
 
-a = 2
-
 if HAS_DATASET == False:
     DATASET_PATH = './sample_dataset'
 
