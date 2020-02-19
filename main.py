@@ -86,16 +86,22 @@ def char_distance(ref, hyp):
 def get_distance(ref_labels, hyp_labels, display=False):
     total_dist = 0
     total_length = 0
+    original = ""
+    result = ""
     for i in range(len(ref_labels)):
         ref = label_to_string(ref_labels[i])
         hyp = label_to_string(hyp_labels[i])
+        original += ref
+        result += hyp
         dist, length = char_distance(ref, hyp)
         total_dist += dist
-        total_length += length 
+        total_length += length
         if display:
             cer = total_dist / total_length
             logger.debug('%d (%0.4f)\n(%s)\n(%s)' % (i, cer, ref, hyp))
+    print('original : ',original,' result : ',result)
     return total_dist, total_length
+
 
 
 def train(model, total_batch_size, queue, criterion, optimizer, device, train_begin, train_loader_count, print_batch=5, teacher_forcing_ratio=1):
@@ -350,7 +356,9 @@ def main():
 
     model = nn.DataParallel(model).to(device)
 
-    optimizer = optim.Adam(model.module.parameters(), lr=args.lr)
+    #optimizer = optim.Adam(model.module.parameters(), lr=args.lr)
+    ## weight_decay 추가
+    optimizer = optim.Adam(model.module.parameters(), lr=args.lr, weight_decay=1e-5)
     criterion = nn.CrossEntropyLoss(reduction='sum', ignore_index=PAD_token).to(device)
 
     bind_model(model, optimizer)
@@ -360,6 +368,8 @@ def main():
 
     if args.mode != "train":
         return
+
+
 
     data_list = os.path.join(DATASET_PATH, 'train_data', 'data_list.csv')
     wav_paths = list()

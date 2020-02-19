@@ -83,6 +83,38 @@ class EncoderRNN(BaseRNN):
         feature_size = math.ceil((feature_size - 11 + 1 + (5*2)) / 2)
         feature_size = math.ceil(feature_size - 11 + 1 + (5*2))
         feature_size *= 32
+        feature_size = 2048
+
+        # # https://github.com/homink/deepspeech.pytorch.ko/blob/master/model.py 참고
+        # self.conv = nn.Sequential(
+        #     nn.Conv2d(1, 32, kernel_size=(41, 11), stride=(2, 2), padding=(0, 10)),
+        #     nn.BatchNorm2d(32),
+        #     nn.Hardtanh(0, 20, inplace=True),
+        #     # padding=(10, 5) 추가함
+        #     nn.Conv2d(32, 32, kernel_size=(21, 11), stride=(2, 1), ),
+        #     nn.BatchNorm2d(32),
+        #     nn.Hardtanh(0, 20, inplace=True)
+        # )
+        #
+        # # print(feature_size)
+        # # feature_size = int(math.floor(feature_size - 41) / 2 + 1)
+        # # print("1st feature_size : ", feature_size)
+        # # feature_size = int(math.floor(feature_size - 21) / 2 + 1)
+        # # print("2nd feature_size : ", feature_size)
+        # # feature_size *= 32
+        # # print("3rd feature_size : ", feature_size)
+        # # ----------------------------------------------------------------------------------------여기까지가 homink님
+        # # print(feature_size)
+        # feature_size = math.ceil((feature_size - 11 + 1 + 10 * 2) / 2)
+        # # print("1st feature_size : ", feature_size)
+        # feature_size = math.ceil(feature_size - 11 + 1)
+        # # print("2nd feature_size : ", feature_size)
+        # feature_size *= 32
+        # #feature_size = 2048
+        # #print("feature_size : ", feature_size)
+
+
+
 
         self.rnn = self.rnn_cell(feature_size, hidden_size, n_layers,
                                  batch_first=True, bidirectional=bidirectional, dropout=dropout_p)
